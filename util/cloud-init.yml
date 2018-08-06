@@ -1,0 +1,29 @@
+#cloud-config
+package_upgrade: true
+packages:
+  - build-essential
+  - libssl-dev
+  - mosh
+  - zlib1g-dev
+power_state:
+  delay: now
+  mode: reboot
+  message: Bootstrap complete, rebooting...
+  timeout: 30
+  condition: True
+runcmd:
+  - sudo -Hiu greg bash -c 'git clone https://github.com/greg-cook/dotfiles.git ~/dotfiles'
+  - sudo -Hiu greg bash -c '~/dotfiles/bootstrap'
+timezone: "Australia/Sydney"
+users:
+  - name: greg
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh-import-id: gh:greg-cook
+write_files:
+  - content: |
+      @reboot sudo shutdown -P +120
+      0 19 * * * sudo shutdown -P
+      0 23 * * * sudo shutdown -P
+    path: /etc/cron.d/shutdown-timer
