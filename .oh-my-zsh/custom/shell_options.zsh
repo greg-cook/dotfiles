@@ -10,18 +10,14 @@ POWERLEVEL9K_AWS_FOREGROUND='black'
 POWERLEVEL9K_KUBECONTEXT_BACKGROUND='blue'
 POWERLEVEL9K_KUBECONTEXT_FOREGROUND='black'
 # current node version in prompt
-POWERLEVEL9K_CUSTOM_NODENV='nodenv version-name'
-POWERLEVEL9K_CUSTOM_NODENV_BACKGROUND='green'
-POWERLEVEL9K_CUSTOM_NODENV_FOREGROUND='black'
+POWERLEVEL9K_NODENV_PROMPT_ALWAYS_SHOW=true
 # current ruby version in prompt
-POWERLEVEL9K_CUSTOM_RBENV='rbenv version-name'
-POWERLEVEL9K_CUSTOM_RBENV_BACKGROUND='red'
-POWERLEVEL9K_CUSTOM_RBENV_FOREGROUND='black'
+POWERLEVEL9K_RBENV_PROMPT_ALWAYS_SHOW=true
 
 # Defines elements shown in the left prompt, some are conditional and not always shown
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs status)
 # Defines elements shown in the right prompt
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(aws kubecontext custom_rbenv custom_nodenv)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(aws kubecontext rbenv nodenv)
 
 # Use 'nerdfont-complete' mode for all the pretty glyphs
 POWERLEVEL9K_MODE='nerdfont-complete'

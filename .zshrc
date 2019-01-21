@@ -1,15 +1,16 @@
-## Uncomment the code below to profile zsh startup time
-## related code at the end of this file
-# zmodload zsh/datetime
-# setopt PROMPT_SUBST
-# PS4='+$EPOCHREALTIME %N:%i> '
-# 
-# logfile=$(mktemp ~/zsh_profile.XXXXXXXX)
-# echo "Logging to $logfile"
-# exec 3>&2 2>$logfile
-# 
-# setopt XTRACE
-##
+# If '~/.time_zsh' file exists, zsh startup time will be profiled
+# This slows down shell startup, so remove '~/.time_zsh' when done
+if [[ -f $HOME/.time_zsh ]]; then
+  zmodload zsh/datetime
+  setopt PROMPT_SUBST
+  PS4='+$EPOCHREALTIME %N:%i> '
+  
+  logfile=$(mktemp ~/zsh_profile.XXXXXXXX)
+  echo "Logging to $logfile"
+  exec 3>&2 2>$logfile
+  
+  setopt XTRACE
+fi
 
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -89,7 +90,8 @@ export SSH_KEY_PATH="$HOME/.ssh/rsa_id"
 alias zshconfig="$EDITOR $HOME/.zshrc"
 alias ohmyzsh="$EDITOR $HOME/.oh-my-zsh"
 
-## Startup profiling code
-# unsetopt XTRACE
-# exec 2>&3 3>&-
-##
+# End zsh profiling
+if [[ -f $HOME/.time_zsh ]]; then
+  unsetopt XTRACE
+  exec 2>&3 3>&-
+fi

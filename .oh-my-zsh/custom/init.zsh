@@ -9,7 +9,7 @@ eval "$(goenv init -)"
 
 # GOPATH
 export GOPATH="${HOME}/go"
-#
+
 # Add directories to path to prefer these over system binaries
 export PATH="/usr/local/opt/libpq/bin:$PATH"
 export PATH="/usr/local/opt/mysql-client/bin:$PATH"
