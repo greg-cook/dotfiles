@@ -4,50 +4,99 @@ echo "Setting up dev environment..."
 
 # Do the following on MacOS only
 if [[ $(uname) == "Darwin" ]]; then
+    echo "MacOS Detected"
+    # Install brew
+    if ! command -v brew >/dev/null 2>&1; then
+        echo "Installing Homebrew..."
+        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    else
+        echo "Homebrew already installed, updating..."
+        brew update
+    fi        
 
-  # Install brew
-  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-
-  # Install allthethings with Brewfile
-  brew bundle --file=util/Brewfile
+    # Install allthethings with Brewfile
+    echo "Installing packages and apps with Homebrew, cask and mas..."
+    brew bundle --file=util/Brewfile
 
 fi
 
 #### Shell (zsh) configuration ####
 # Install Oh My Zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
+if [[ ! -d $HOME/.oh-my-zsh ]]; then
+    # Install Oh My Zsh
+    echo "Installing Oh My Zsh..."
+    RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
+else
+    # Use the inbuilt mechanism to update Oh My Zsh
+    echo "Oh My Zsh already installed, updating..."
+    cd $HOME/.oh-my-zsh
+    git pull
+    cd $HOME/dotfiles
+fi
 
 # Install Powerlevel9k zsh theme
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $HOME/.oh-my-zsh/custom/themes/powerlevel10k
+if [[ ! -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]]; then
+    echo "Installing Powerlevel10k zsh theme..."
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $HOME/.oh-my-zsh/custom/themes/powerlevel10k
+else
+    echo "Powerlevel10k already installed, updating..."
+    cd $HOME/.oh-my-zsh/custom/themes/powerlevel10k
+    git pull
+    cd $HOME/dotfiles
+fi
 
 # Install additional zsh plugins not included with Oh My Zsh
-git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+for r in zsh-autosuggestions zsh-syntax-highlighting; do
+    if [[ ! -d $HOME/.oh-my-zsh/custom/plugins/$r ]]; then
+        echo "Installing $r..."
+        git clone --depth=1 https://github.com/zsh-users/$r $HOME/.oh-my-zsh/custom/plugins/$r
+    else
+        echo "$r already installed, updating..."
+        cd $HOME/.oh-my-zsh/custom/plugins/$r
+        git pull
+        cd $HOME/dotfiles
+    fi
+done
 
 # Link custom .zsh files to Oh My Zsh custom folder
-ln -s $HOME/custom/*.zsh $HOME/.oh-my-zsh/custom/
+for f in custom/*; do
+    echo "Linking custom .zsh files..."
+    ln -sf $HOME/dotfiles/$f $HOME/.oh-my-zsh/$f
+done
 
 # Link $HOME dotfiles
+echo "Linking files to home directory..."
 for f in *; do
     if [[ $f == "README.md" || $f == "bootstrap" ]]; then
-        # special files, nothing to do here
+        echo "" # HACK: special files, nothing to do here
     elif [[ -d $f ]]; then
-        # directories, nothing to do here
+        echo "" # HACK: directories, nothing to do here
     else
         ln -sf $HOME/dotfiles/$f $HOME/.$f
     fi
 done
 
 # Setup SSH
+echo "Linking ssh files..."
 ln -sf $HOME/dotfiles/ssh $HOME/.ssh
 mkdir -p $HOME/.ssh/config.d
 
 # Restore configs with mackup
+echo "Linking mackup config and restoring files..."
 ln -sf $HOME/dotfiles/mackup $HOME/.mackup
 mackup restore
 
 # Vim setup
-git clone --depth=1 https://github.com/kristijanhusak/vim-packager $HOME/.vim/pack/packager/opt/vim-packager
+if [[ ! -d $HOME/.vim/pack/packager/opt/vim-packager ]]; then
+    echo "Installing vim-packager..."
+    git clone --depth=1 https://github.com/kristijanhusak/vim-packager $HOME/.vim/pack/packager/opt/vim-packager
+else
+    echo "vim-packager already installed, updating..."
+    cd $HOME/.vim/pack/packager/opt/vim-packager
+    git pull
+    cd $HOME/dotfiles
+fi
 
 # Change the users default shell
-chsh -s /usr/local/bin/zsh
+echo "Changing the default shell..."
+sudo chsh -s /usr/local/bin/zsh $USER
