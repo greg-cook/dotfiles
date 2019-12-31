@@ -1,0 +1,149 @@
+tap "buo/cask-upgrade"
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/cask-drivers"
+tap "homebrew/cask-fonts"
+tap "homebrew/core"
+
+# Search tool like grep, but optimized for programmers
+brew "ack"
+
+# GNU File, Shell, and Text utilities
+brew "coreutils"
+
+# Extendable version manager with support for Ruby, Node.js, Erlang & more
+brew "asdf"
+
+# Interpreted, interactive, object-oriented programming language
+brew "python"
+
+# Official Amazon AWS command-line interface
+brew "awscli"
+
+# Bourne-Again SHell, a UNIX command interpreter
+brew "bash"
+
+# Secure and free password manager for all of your devices
+brew "bitwarden-cli"
+
+# Get a file from an HTTP, HTTPS or FTP server
+brew "curl"
+
+# Distributed revision control system
+brew "git"
+
+# Add GitHub support to git on the command-line
+brew "hub"
+
+# Production Grade K8s Installation, Upgrades, and Management
+brew "kops"
+
+# Tool that can switch between kubectl contexts easily and create aliases
+brew "kubectx"
+
+# Postgres C API library
+brew "libpq"
+
+# Keep your Mac's application settings in sync
+brew "mackup"
+
+# Mac App Store command-line interface
+brew "mas"
+
+# Open source relational database management system
+brew "mysql-client@5.7"
+
+# Passphrase entry dialog utilizing the Assuan protocol
+brew "pinentry"
+
+# Interpreted, interactive, object-oriented programming language
+brew "python@2"
+
+# User interface to the TELNET protocol (built from macOS Sierra sources)
+brew "telnet"
+
+# Text interface for Git repositories
+brew "tig"
+
+# Extraction utility for .zip compressed archives
+brew "unzip"
+
+# Vi 'workalike' with many additional features
+brew "vim"
+
+# Executes a program periodically, showing output fullscreen
+brew "watch"
+
+# Internet file retriever
+brew "wget"
+
+# Tracks most-used directories to make cd smarter
+brew "z"
+
+# UNIX shell (command interpreter)
+brew "zsh"
+
+# Drone CI cli
+tap "drone/drone"
+brew "drone/drone/drone"
+
+# Validate your Kubernetes configurations
+tap "garethr/kubeval"
+brew "garethr/kubeval/kubeval"
+
+# Tail logs from multiple Kubernetes pods at the same time
+tap "johanhaleby/kubetail"
+brew "johanhaleby/kubetail/kubetail"
+
+# Decode all parts of a kubernetes secret, no more copypasting!
+tap "mveritym/mel"
+brew "mveritym/mel/kubedecode"
+
+# The official CLI for Amazon EKS
+tap "weaveworks/tap"
+brew "weaveworks/tap/eksctl"
+
+cask "aerial"
+cask "authy"
+cask "balenaetcher"
+cask "calibre"
+cask "daisydisk"
+cask "docker"
+cask "firefox"
+cask "font-firacode-nerd-font-mono"
+cask "forklift"
+cask "google-chrome"
+cask "google-cloud-sdk"
+cask "google-drive-file-stream"
+cask "gpg-suite-no-mail"
+cask "insomnia"
+cask "istat-menus"
+cask "iterm2"
+cask "keepassxc"
+cask "lastpass"
+cask "logitech-options"
+cask "parsec"
+cask "plex-media-player"
+cask "private-internet-access"
+cask "rectangle"
+cask "skype"
+cask "steam"
+cask "tableplus"
+cask "teamviewer"
+cask "transmission"
+cask "visual-studio-code"
+cask "vlc"
+cask "vnc-viewer"
+
+mas "Bitwarden", id: 1352778147
+mas "Debit & Credit", id: 882637653
+mas "Microsoft Excel", id: 462058435
+mas "Microsoft Remote Desktop", id: 1295203466
+mas "Microsoft Word", id: 462054704
+mas "OneDrive", id: 823766827
+mas "Parcel", id: 639968404
+mas "Slack", id: 803453959
+mas "SonicWall Mobile Connect", id: 822514576
+mas "Unsplash Wallpapers", id: 1284863847
+mas "WhatsApp", id: 1147396723
+mas "Xcode", id: 497799835

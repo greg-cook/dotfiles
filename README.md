@@ -4,31 +4,34 @@ A collection of files to setup my development environment
 
 ## Installation
 
+### Prerequisites:
+
+Need to have `git` installed. On MacOS:
+
+```sh
+xcode-select --install
+```
+
 Clone this repo and run bootstrap script:
 
 ```sh
 git clone git@github.com:greg-cook/dotfiles.git ~/dotfiles
-./bootstrap.sh
+cd ~/dotfiles && ./bootstrap
 ```
 
 ## Terminal Setup
 
-* [Oh My Zsh](https://github.com/robbyrussell/oh-my-zsh) is used to manage my shell setup.
-* [Powerlevel9k](https://github.com/bhilburn/powerlevel9k) is the theme I use.
+My terminal setup leverages [Oh My Zsh](https://github.com/robbyrussell/oh-my-zsh) very heavily and is therefore structured around it:
 
-### Custom files
+* Theme: [Powerlevel10k](https://github.com/romkatv/powerlevel10k)
+* Custom `.zsh` files are in [custom](https://github.com/greg-cook/dotfiles/tree/master/custom). These files are used to:
+  * declare custom aliases and functions
+  * export environment variables
 
-Custom `.zsh` files are in [/.oh-my-zsh/custom](https://github.com/greg-cook/dotfiles/.oh-my-zsh/custom)
-
-These files are used to:
-* declare custom aliases and functions
-* setup environment variables
-* setup the prompt
-
-The `bootstrap.sh` script symlinks these files to `~/.oh-my-zsh/custom/*.zsh` so they are loaded with `zsh`
+  The `bootstrap` script symlinks these files to `~/.oh-my-zsh/custom/*.zsh` so they are loaded by `Oh My Zsh`
 
 ### Secret values
 
-Any "secret" data is kept in [/.oh-my-zsh/custom/secret.zsh](https://github.com/greg-cook/dotfiles/.oh-my-zsh/custom/secret.zsh)
+Any "secret" data is kept in [custom/secret.zsh](https://github.com/greg-cook/dotfiles/custom/secret.zsh)
 
-This file is ignored so it is not accidentally commited to source control. Make sure to backup its contents as appropriate.
+This file is ignored so it is not accidentally commited to source control. Make sure to copy/backup its contents as appropriate.

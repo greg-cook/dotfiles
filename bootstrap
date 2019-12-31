@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+echo "Setting up dev environment..."
+
+# Do the following on MacOS only
+if [[ $(uname) == "Darwin" ]]; then
+
+  # Install brew
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+  # Install allthethings with Brewfile
+  brew bundle --file=util/Brewfile
+
+fi
+
+#### Shell (zsh) configuration ####
+# Install Oh My Zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
+
+# Install Powerlevel9k zsh theme
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $HOME/.oh-my-zsh/custom/themes/powerlevel10k
+
+# Install additional zsh plugins not included with Oh My Zsh
+git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+
+# Link custom .zsh files to Oh My Zsh custom folder
+ln -s $HOME/custom/*.zsh $HOME/.oh-my-zsh/custom/
+
+# Link $HOME dotfiles
+for f in *; do
+    if [[ $f == "README.md" || $f == "bootstrap" ]]; then
+        # special files, nothing to do here
+    elif [[ -d $f ]]; then
+        # directories, nothing to do here
+    else
+        ln -sf $HOME/dotfiles/$f $HOME/.$f
+    fi
+done
+
+# Setup SSH
+ln -sf $HOME/dotfiles/ssh $HOME/.ssh
+mkdir -p $HOME/.ssh/config.d
+
+# Restore configs with mackup
+ln -sf $HOME/dotfiles/mackup $HOME/.mackup
+mackup restore
+
+# Vim setup
+git clone --depth=1 https://github.com/kristijanhusak/vim-packager $HOME/.vim/pack/packager/opt/vim-packager
+
+# Change the users default shell
+chsh -s /usr/local/bin/zsh
