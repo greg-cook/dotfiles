@@ -12,7 +12,7 @@ if [[ $(uname) == "Darwin" ]]; then
     else
         echo "Homebrew already installed, updating..."
         brew update
-    fi        
+    fi
 
     # Install allthethings with Brewfile
     echo "Installing packages and apps with Homebrew, cask and mas..."
@@ -85,17 +85,6 @@ mkdir -p $HOME/.ssh/config.d
 echo "Linking mackup config and restoring files..."
 ln -sf $HOME/dotfiles/mackup $HOME/.mackup
 mackup restore
-
-# Vim setup
-if [[ ! -d $HOME/.vim/pack/packager/opt/vim-packager ]]; then
-    echo "Installing vim-packager..."
-    git clone --depth=1 https://github.com/kristijanhusak/vim-packager $HOME/.vim/pack/packager/opt/vim-packager
-else
-    echo "vim-packager already installed, updating..."
-    cd $HOME/.vim/pack/packager/opt/vim-packager
-    git pull
-    cd $HOME/dotfiles
-fi
 
 # Change the users default shell
 echo "Changing the default shell..."
