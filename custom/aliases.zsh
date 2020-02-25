@@ -1,6 +1,10 @@
 alias cl='clear'
 alias e='$EDITOR'
 
+# Use nvim instead of vim/vi
+alias vim='nvim'
+alias vi='nvim'
+
 # This is required so you can use aliases with 'watch'
 alias watch='watch '
 
