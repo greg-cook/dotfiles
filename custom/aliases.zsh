@@ -23,7 +23,7 @@ alias deploydiff="git log production..master --pretty=format:'%<(23)%an    %s' -
 # Edit hosts file
 alias hosts='sudo $EDITOR /etc/hosts'
 
-# kube things
+# kubectx shortcuts
 alias kx='kubectx'
 alias kns='kubens'
 
