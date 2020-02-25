@@ -26,3 +26,6 @@ alias hosts='sudo $EDITOR /etc/hosts'
 # kube things
 alias kx='kubectx'
 alias kns='kubens'
+
+# Show the weather
+alias wx='curl v2.wttr.in'
