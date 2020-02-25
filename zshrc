@@ -42,6 +42,7 @@ HIST_STAMPS="yyyy-mm-dd"
 plugins=(
 	asdf
 	aws
+	direnv
 	docker
 	docker-compose
 	dotenv
@@ -62,8 +63,6 @@ plugins=(
 	)
 
 source $ZSH/oh-my-zsh.sh
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
