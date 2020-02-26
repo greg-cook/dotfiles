@@ -120,7 +120,12 @@ asdf install
 
 # Restore configs with mackup
 echo "Linking mackup config and restoring files..."
-ln -sf $HOME/dotfiles/mackup $HOME/.mackup
+if [[ ! -d $HOME/.mackup ]]; then
+  mkdir -p $HOME/.mackup
+fi
+for f in mackup/*; do
+  ln -sf $HOME/dotfiles/$f $HOME/.$f
+done
 mackup restore
 
 # Change the users default shell
