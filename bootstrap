@@ -16,13 +16,13 @@ if [[ $(uname) == "Darwin" ]]; then
     # Install brew
     if ! command -v brew >/dev/null 2>&1; then
         echo "Installing Homebrew..."
-        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" </dev/null
     else
         echo "Homebrew already installed, updating..."
         brew update
     fi
-    # Install packages from Brewfile
-    echo "Installing packages and apps with Homebrew, cask and mas..."
+    # Install apps & packages with Brewfile
+    echo "Installing packages and apps with Homebrew, Cask and mas..."
     brew bundle --file=util/Brewfile --no-lock --no-upgrade
 fi
 
@@ -40,7 +40,7 @@ else
     cd $HOME/dotfiles
 fi
 
-# Install Powerlevel9k zsh theme
+# Install Powerlevel10k zsh theme
 if [[ ! -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]]; then
     echo "Installing Powerlevel10k zsh theme..."
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $HOME/.oh-my-zsh/custom/themes/powerlevel10k
@@ -75,16 +75,6 @@ echo "Linking ssh config..."
 mkdir -p $HOME/.ssh
 ln -sf $HOME/dotfiles/ssh/config $HOME/.ssh/config
 mkdir -p $HOME/.ssh/config.d
-
-# Link config files
-for d in config/*; do
-  if [[ -d $d ]]; then
-    mkdir -p $HOME/.$d
-    for f in $d/*; do
-      ln -sf $HOME/dotfiles/$f $HOME/.$f
-    done
-  fi
-done
 
 # Link $HOME dotfiles
 echo "Linking files to home directory..."
