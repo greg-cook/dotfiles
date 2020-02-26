@@ -126,7 +126,7 @@ fi
 for f in mackup/*; do
   ln -sf $HOME/dotfiles/$f $HOME/.$f
 done
-mackup restore
+mackup restore -f
 
 # Change the users default shell
 echo "Changing the default shell..."
