@@ -1,3 +1,0 @@
-use asdf
-watch_file "~/.oh-my-zsh/custom/environment.zsh"
-watch_file "~/.oh-my-zsh/custom/secret.zsh"

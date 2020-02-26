@@ -79,7 +79,7 @@ mkdir -p $HOME/.ssh/config.d
 # Link config files
 for d in config/*; do
   if [[ -d $d ]]; then
-    mkdir -p $d
+    mkdir -p $HOME/.$d
     for f in $d/*; do
       ln -sf $HOME/dotfiles/$f $HOME/.$f
     done
@@ -102,7 +102,7 @@ done
 touch $HOME/.z
 
 # Install asdf version manager plugins
-for p in direnv golang kubectl nodejs ruby yarn; do
+for p in golang kubectl nodejs ruby yarn; do
   if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
     echo "Installing asdf plugin $p..."
     asdf plugin add $p
@@ -117,9 +117,6 @@ done
 
 # Install default versions
 asdf install
-
-# Allow root .envrc file fir direnv
-direnv allow $HOME/.envrc
 
 # Restore configs with mackup
 echo "Linking mackup config and restoring files..."
