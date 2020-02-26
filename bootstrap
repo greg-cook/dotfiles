@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 
+set -e
+
 echo "Setting up dev environment..."
+
+# Ask for the administrator password upfront
+sudo -v
+
+# Keep-alive: update existing `sudo` time stamp until `.macos` has finished
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 # Do the following on MacOS only
 if [[ $(uname) == "Darwin" ]]; then
@@ -13,11 +21,9 @@ if [[ $(uname) == "Darwin" ]]; then
         echo "Homebrew already installed, updating..."
         brew update
     fi
-
-    # Install allthethings with Brewfile
+    # Install packages from Brewfile
     echo "Installing packages and apps with Homebrew, cask and mas..."
-    brew bundle --file=util/Brewfile
-
+    brew bundle --file=util/Brewfile --no-lock --no-upgrade
 fi
 
 #### Shell (zsh) configuration ####
@@ -64,22 +70,56 @@ for f in custom/*; do
     ln -sf $HOME/dotfiles/$f $HOME/.oh-my-zsh/$f
 done
 
+# Link ssh config
+echo "Linking ssh config..."
+mkdir -p $HOME/.ssh
+ln -sf $HOME/dotfiles/ssh/config $HOME/.ssh/config
+mkdir -p $HOME/.ssh/config.d
+
+# Link config files
+for d in config/*; do
+  if [[ -d $d ]]; then
+    mkdir -p $d
+    for f in $d/*; do
+      ln -sf $HOME/dotfiles/$f $HOME/.$f
+    done
+  fi
+done
+
 # Link $HOME dotfiles
 echo "Linking files to home directory..."
 for f in *; do
-    if [[ $f == "README.md" || $f == "bootstrap" ]]; then
-        echo "" # HACK: special files, nothing to do here
-    elif [[ -d $f ]]; then
-        echo "" # HACK: directories, nothing to do here
-    else
-        ln -sf $HOME/dotfiles/$f $HOME/.$f
-    fi
+  if [[ $f == "README.md" || $f == "bootstrap" ]]; then
+    echo "Ignoring special file $f"
+  elif [[ -d $f ]]; then
+    echo "Ignoring directory $f"
+  else
+    ln -sf $HOME/dotfiles/$f $HOME/.$f
+  fi
 done
 
-# Setup SSH
-echo "Linking ssh files..."
-ln -sf $HOME/dotfiles/ssh $HOME/.ssh
-mkdir -p $HOME/.ssh/config.d
+# Create this file to suppress error from z on first 'cd'
+touch $HOME/.z
+
+# Install asdf version manager plugins
+for p in direnv golang kubectl nodejs ruby yarn; do
+  if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
+    echo "Installing asdf plugin $p..."
+    asdf plugin add $p
+    if [[ $p == "nodejs" ]]; then
+      bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
+    fi
+  else
+    echo "asdf plugin $p already installed, updating..."
+    asdf plugin update $p
+  fi
+done
+
+# Install default versions
+asdf install
+
+# Allow root .envrc file fir direnv
+direnv allow $HOME/.envrc
 
 # Restore configs with mackup
 echo "Linking mackup config and restoring files..."
@@ -89,3 +129,5 @@ mackup restore
 # Change the users default shell
 echo "Changing the default shell..."
 sudo chsh -s /usr/local/bin/zsh $USER
+
+echo "Setup complete, quit terminal and open iTerm to continue..."
