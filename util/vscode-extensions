@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+extensions=(
+  ahebrank.yaml2json
+  CoenraadS.bracket-pair-colorizer-2
+  dbaeumer.vscode-eslint
+  eamodio.gitlens
+  EditorConfig.EditorConfig
+  Equinusocio.vsc-community-material-theme
+  Equinusocio.vsc-material-theme
+  equinusocio.vsc-material-theme-icons
+  mikestead.dotenv
+  ms-azuretools.vscode-docker
+  ms-python.python
+  ms-vscode.Go
+  oderwat.indent-rainbow
+  PKief.material-icon-theme
+  rebornix.ruby
+  redhat.vscode-yaml
+  streetsidesoftware.code-spell-checker
+  tht13.html-preview-vscode
+  wingrunr21.vscode-ruby
+  yzhang.markdown-all-in-one
+)
+
+for e in ${extensions[@]}; do
+  code --install-extension $e
+done

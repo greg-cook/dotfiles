@@ -92,7 +92,7 @@ done
 touch $HOME/.z
 
 # Install asdf version manager plugins
-for p in golang kubectl nodejs ruby yarn; do
+for p in golang kubectl nodejs python ruby yarn; do
   if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
     echo "Installing asdf plugin $p..."
     asdf plugin add $p

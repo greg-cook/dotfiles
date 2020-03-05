@@ -6,16 +6,9 @@ A collection of files to setup my development environment
 
 ### Prerequisites:
 
-Need to have `git` installed. On MacOS:
+Download this repo to `~/dotfiles` and run bootstrap script:
 
 ```sh
-xcode-select --install
-```
-
-Clone this repo and run bootstrap script:
-
-```sh
-git clone git@github.com:greg-cook/dotfiles.git ~/dotfiles
 cd ~/dotfiles && ./bootstrap
 ```
 
@@ -39,4 +32,9 @@ This file is ignored so it is not accidentally commited to source control. Make 
 ## MacOS preferences
 ```sh
 ./util/macos
+```
+
+## VS Code preferences
+```sh
+./util/vscode-extensions
 ```
