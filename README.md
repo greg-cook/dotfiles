@@ -27,7 +27,7 @@ My terminal setup leverages [Oh My Zsh](https://github.com/robbyrussell/oh-my-zs
 
 Any "secret" data is kept in [custom/secret.zsh](https://github.com/greg-cook/dotfiles/custom/secret.zsh)
 
-This file is ignored so it is not accidentally commited to source control. Make sure to copy/backup its contents as appropriate.
+This file is ignored so it is not accidentally committed to source control. Make sure to copy/backup its contents as appropriate.
 
 ## MacOS preferences
 ```sh
