@@ -16,7 +16,7 @@ if [[ $(uname) == "Darwin" ]]; then
     # Install brew
     if ! command -v brew >/dev/null 2>&1; then
         echo "Installing Homebrew..."
-        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" </dev/null
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" </dev/null
     else
         echo "Homebrew already installed, updating..."
         brew update
