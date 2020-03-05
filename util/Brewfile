@@ -23,8 +23,6 @@ brew "bash"
 brew "curl"
 # Command-line tool to access Weave Flux, the Kubernetes GitOps operator
 brew "fluxctl"
-# Interpreted, interactive, object-oriented programming language
-brew "python"
 # Distributed revision control system
 brew "git"
 # Add GitHub support to git on the command-line
@@ -75,7 +73,6 @@ cask "calibre"
 cask "daisydisk"
 cask "docker"
 cask "firefox"
-cask "font-firacode-nerd-font-mono"
 cask "font-jetbrains-mono"
 cask "forklift"
 cask "google-chrome"
@@ -89,18 +86,13 @@ cask "keepassxc"
 cask "lastpass"
 cask "logitech-options"
 cask "parsec"
-cask "plex-media-player"
 cask "private-internet-access"
 cask "rectangle"
-cask "skype"
-cask "steam"
 cask "tableplus"
 cask "teamviewer"
-cask "transmission"
 cask "visual-studio-code"
 cask "vlc"
 cask "vnc-viewer"
-cask "zoomus"
 mas "Debit & Credit", id: 882637653
 mas "Microsoft Excel", id: 462058435
 mas "Microsoft Remote Desktop", id: 1295203466
