@@ -11,8 +11,5 @@ export PATH="/usr/local/opt/v8@3.15/bin:$PATH"
 export EDITOR='nvim'
 export VISUAL='nvim'
 
-# Suppress direnv noise
-export DIRENV_LOG_FORMAT=""
-
-# Don't prompt for .env loading
+# Don't prompt for .env loading from 'dotenv' OMZ plugin
 export ZSH_DOTENV_PROMPT=false
