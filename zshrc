@@ -61,6 +61,10 @@ plugins=(
 	zsh-syntax-highlighting
 	)
 
+# Suppress 'Insecure completion-dependent directories detected'
+# https://github.com/ohmyzsh/ohmyzsh/issues/6835#issuecomment-390216875
+ZSH_DISABLE_COMPFIX=true
+
 source $ZSH/oh-my-zsh.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
