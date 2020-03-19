@@ -7,119 +7,143 @@ echo "Setting up dev environment..."
 # Ask for the administrator password upfront
 sudo -v
 
-# Keep-alive: update existing `sudo` time stamp until `.macos` has finished
+# Keep-alive: update existing `sudo` time stamp until `bootstrap` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
+WORKDIR=$(pwd)
+
+# Check for internet connection
+dig +short +time=1 +tries=1 github.com >/dev/null 2>&1 || OFFLINE='true'
+
+if [[ $OFFLINE == 'true' ]]; then
+  echo "Running in offline mode..."
+fi
+
 # Do the following on MacOS only
-if [[ $(uname) == "Darwin" ]]; then
-    echo "MacOS Detected"
-    # Install brew
-    if ! command -v brew >/dev/null 2>&1; then
-        echo "Installing Homebrew..."
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" </dev/null
-    else
-        echo "Homebrew already installed, updating..."
-        brew update
-    fi
-    # Install apps & packages with Brewfile
-    echo "Installing packages and apps with Homebrew, Cask and mas..."
-    brew bundle --file=util/Brewfile --no-lock --no-upgrade
+if [[ $OFFLINE != 'true' ]]; then
+  if [[ $(uname) == "Darwin" ]]; then
+      echo "MacOS Detected"
+      # Install brew
+      if ! command -v brew >/dev/null 2>&1; then
+          echo "Installing Homebrew..."
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" </dev/null
+      else
+          echo "Homebrew already installed, updating..."
+          brew update
+      fi
+      # Install apps & packages with Brewfile
+      echo "Installing packages and apps with Homebrew, Cask and mas..."
+      brew bundle --file=util/Brewfile --no-lock --no-upgrade
+  fi
 fi
 
 #### Shell (zsh) configuration ####
 # Install Oh My Zsh
-if [[ ! -d $HOME/.oh-my-zsh ]]; then
-    # Install Oh My Zsh
-    echo "Installing Oh My Zsh..."
-    RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
-else
-    # Use the inbuilt mechanism to update Oh My Zsh
-    echo "Oh My Zsh already installed, updating..."
-    cd $HOME/.oh-my-zsh
-    git pull
-    cd $HOME/dotfiles
+if [[ $OFFLINE != 'true' ]]; then
+  if [[ ! -d $HOME/.oh-my-zsh ]]; then
+      # Install Oh My Zsh
+      echo "Installing Oh My Zsh..."
+      RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
+  else
+      # Use the inbuilt mechanism to update Oh My Zsh
+      echo "Oh My Zsh already installed, updating..."
+      cd $HOME/.oh-my-zsh
+      git pull
+      cd $WORKDIR
+  fi
 fi
 
 # Install Powerlevel10k zsh theme
-if [[ ! -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]]; then
-    echo "Installing Powerlevel10k zsh theme..."
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $HOME/.oh-my-zsh/custom/themes/powerlevel10k
-else
-    echo "Powerlevel10k already installed, updating..."
-    cd $HOME/.oh-my-zsh/custom/themes/powerlevel10k
-    git pull
-    cd $HOME/dotfiles
+if [[ $OFFLINE != 'true' ]]; then
+  if [[ ! -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]]; then
+      echo "Installing Powerlevel10k zsh theme..."
+      git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $HOME/.oh-my-zsh/custom/themes/powerlevel10k
+  else
+      echo "Powerlevel10k already installed, updating..."
+      cd $HOME/.oh-my-zsh/custom/themes/powerlevel10k
+      git pull
+      cd $WORKDIR
+  fi
 fi
 
 # Install additional zsh plugins not included with Oh My Zsh
-for r in zsh-autosuggestions zsh-syntax-highlighting; do
-    if [[ ! -d $HOME/.oh-my-zsh/custom/plugins/$r ]]; then
-        echo "Installing $r..."
-        git clone --depth=1 https://github.com/zsh-users/$r $HOME/.oh-my-zsh/custom/plugins/$r
-    else
-        echo "$r already installed, updating..."
-        cd $HOME/.oh-my-zsh/custom/plugins/$r
-        git pull
-        cd $HOME/dotfiles
-    fi
-done
+if [[ $OFFLINE != 'true' ]]; then
+  for r in zsh-autosuggestions zsh-syntax-highlighting; do
+      if [[ ! -d $HOME/.oh-my-zsh/custom/plugins/$r ]]; then
+          echo "Installing $r..."
+          git clone --depth=1 https://github.com/zsh-users/$r $HOME/.oh-my-zsh/custom/plugins/$r
+      else
+          echo "$r already installed, updating..."
+          cd $HOME/.oh-my-zsh/custom/plugins/$r
+          git pull
+          cd $WORKDIR
+      fi
+  done
+fi
 
 # Link custom .zsh files to Oh My Zsh custom folder
+echo "Linking custom .zsh files..."
 for f in custom/*; do
-    echo "Linking custom .zsh files..."
-    ln -sf $HOME/dotfiles/$f $HOME/.oh-my-zsh/$f
+    ln -sf $WORKDIR/$f $HOME/.oh-my-zsh/$f
 done
 
 # Link ssh config
 echo "Linking ssh config..."
 mkdir -p $HOME/.ssh
-ln -sf $HOME/dotfiles/ssh/config $HOME/.ssh/config
+ln -sf $WORKDIR/ssh/config $HOME/.ssh/config
 mkdir -p $HOME/.ssh/config.d
 
 # Link $HOME dotfiles
 echo "Linking files to home directory..."
 for f in *; do
-  if [[ $f == "README.md" || $f == "bootstrap" ]]; then
-    echo "Ignoring special file $f"
-  elif [[ -d $f ]]; then
-    echo "Ignoring directory $f"
-  else
-    ln -sf $HOME/dotfiles/$f $HOME/.$f
+  if [[ ! $f == "README.md" ]] && [[ ! $f == "bootstrap" ]] && [[ ! -d $f ]]; then
+    ln -sf $WORKDIR/$f $HOME/.$f
   fi
 done
 
 # Create this file to suppress error from z on first 'cd'
-touch $HOME/.z
+if [[ ! -f $HOME/.z ]]; then
+  touch $HOME/.z
+fi
 
 # Install asdf version manager plugins
-for p in golang kubectl nodejs python ruby yarn; do
-  if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
-    echo "Installing asdf plugin $p..."
-    asdf plugin add $p
-    if [[ $p == "nodejs" ]]; then
-      bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
+if [[ $OFFLINE != 'true' ]]; then
+  for p in golang kubectl nodejs python ruby yarn; do
+    if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
+      echo "Installing asdf plugin $p..."
+      asdf plugin add $p
+      if [[ $p == "nodejs" ]]; then
+        bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
+      fi
+    else
+      echo "asdf plugin $p already installed, updating..."
+      asdf plugin update $p
     fi
-  else
-    echo "asdf plugin $p already installed, updating..."
-    asdf plugin update $p
-  fi
-done
+  done
+fi
 
 # Install default versions
-asdf install
+if [[ $OFFLINE != 'true' ]]; then
+  asdf install
+fi
 
 # Restore configs with mackup
-echo "Linking mackup config and restoring files..."
+echo "Linking mackup config..."
 if [[ ! -d $HOME/.mackup ]]; then
   mkdir -p $HOME/.mackup
 fi
 for f in mackup/*; do
-  ln -sf $HOME/dotfiles/$f $HOME/.$f
+  ln -sf $WORKDIR/$f $HOME/.$f
 done
-mackup restore -f
+if [[ $OFFLINE != 'true' ]]; then
+  echo "Restoring files with mackup..."
+  mackup restore -f
+fi
 
 # Change the users default shell
-echo "Changing the default shell..."
-sudo chsh -s /usr/local/bin/zsh $USER
+if [[ $SHELL != "/usr/local/bin/zsh" ]]; then
+  echo "Changing the default shell..."
+  sudo chsh -s /usr/local/bin/zsh $USER
+fi
 
-echo "Setup complete, quit terminal and open iTerm to continue..."
+echo "---> Bootstrap complete, happy hacking!"
