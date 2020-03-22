@@ -91,9 +91,9 @@ cask "private-internet-access"
 cask "rectangle"
 cask "tableplus"
 cask "teamviewer"
-cask "visual-studio-code"
 cask "vlc"
 cask "vnc-viewer"
+cask "vscodium"
 mas "Debit & Credit", id: 882637653
 mas "Microsoft Excel", id: 462058435
 mas "Microsoft Remote Desktop", id: 1295203466
