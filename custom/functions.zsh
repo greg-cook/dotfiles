@@ -1,6 +1,6 @@
 function fetch-and-prune {
   # fetch all branches
-  git fetch --all
+  git fetch --all >/dev/null
   # Prune remote branches
   git remote prune origin
 }
@@ -57,4 +57,9 @@ function brew() {
       command brew $@
       ;;
   esac
+}
+
+# Drain kubernetes node in preparation of replacement
+function kdrain() {
+  kubectl drain $1 --force --delete-local-data --ignore-daemonsets
 }

@@ -29,3 +29,6 @@ alias kns='kubens'
 
 # Show the weather
 alias wx='curl v2.wttr.in'
+
+# Copy public ip to the clipboard
+alias pubip='curl -s ipv4.icanhazip.com | pbcopy'

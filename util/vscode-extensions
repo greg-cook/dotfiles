@@ -25,3 +25,4 @@ extensions=(
 for e in ${extensions[@]}; do
   code --install-extension $e
 done
+

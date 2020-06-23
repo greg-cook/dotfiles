@@ -1,5 +1,7 @@
 golang 1.13.5
-yarn 1.22.0
+kubectl system
+helm system
+yarn 1.22.4
 python 3.8.2 2.7.17
-nodejs 10.17.0
+nodejs 12.16.2
 ruby 2.7.0
