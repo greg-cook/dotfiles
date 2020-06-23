@@ -8,14 +8,20 @@ extensions=(
   Equinusocio.vsc-community-material-theme
   Equinusocio.vsc-material-theme
   equinusocio.vsc-material-theme-icons
+  eriklynd.json-tools
+  golang.Go
+  lonefy.vscode-JS-CSS-HTML-formatter
   mikestead.dotenv
   ms-azuretools.vscode-docker
+  ms-kubernetes-tools.vscode-kubernetes-tools
   ms-python.python
-  ms-vscode.Go
   oderwat.indent-rainbow
+  PascalReitermann93.vscode-yaml-sort
   PKief.material-icon-theme
   rebornix.ruby
   redhat.vscode-yaml
+  shakram02.bash-beautify
+  shanoor.vscode-nginx
   streetsidesoftware.code-spell-checker
   tht13.html-preview-vscode
   wingrunr21.vscode-ruby
@@ -25,4 +31,3 @@ extensions=(
 for e in ${extensions[@]}; do
   code --install-extension $e
 done
-
