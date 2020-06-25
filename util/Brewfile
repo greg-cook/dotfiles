@@ -6,8 +6,10 @@ tap "homebrew/cask"
 tap "homebrew/cask-drivers"
 tap "homebrew/cask-fonts"
 tap "homebrew/core"
+tap "homebrew/services"
 tap "johanhaleby/kubetail"
 tap "mveritym/mel"
+tap "teamookla/speedtest"
 tap "weaveworks/tap"
 # Search tool like grep, but optimized for programmers
 brew "ack"
@@ -19,14 +21,24 @@ brew "asdf"
 brew "awscli"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
+# Cross-platform make
+brew "cmake"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
+# Play, record, convert, and stream audio and video
+brew "ffmpeg"
 # Command-line tool to access Weave Flux, the Kubernetes GitOps operator
 brew "fluxctl"
+# Command-line fuzzy finder written in Go
+brew "fzf"
 # Distributed revision control system
 brew "git"
+# The Kubernetes package manager
+brew "helm"
 # Add GitHub support to git on the command-line
 brew "hub"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
 # Production Grade K8s Installation, Upgrades, and Management
 brew "kops"
 # Tool that can switch between kubectl contexts easily and create aliases
@@ -43,12 +55,16 @@ brew "mysql-client@5.7"
 brew "neovim"
 # Passphrase entry dialog utilizing the Assuan protocol
 brew "pinentry"
-# User interface to the TELNET protocol (built from macOS Sierra sources)
+# Manage compile and link flags for libraries
+brew "pkg-config"
+# User interface to the TELNET protocol
 brew "telnet"
 # Text interface for Git repositories
 brew "tig"
 # Extraction utility for .zip compressed archives
 brew "unzip"
+# Sends magic packets to wake up network-devices
+brew "wakeonlan"
 # Executes a program periodically, showing output fullscreen
 brew "watch"
 # Internet file retriever
@@ -64,6 +80,8 @@ brew "garethr/kubeval/kubeval"
 brew "johanhaleby/kubetail/kubetail"
 # Decode all parts of a kubernetes secret, no more copypasting!
 brew "mveritym/mel/kubedecode"
+# Ookla Speedtest
+brew "teamookla/speedtest/speedtest"
 # The official CLI for Amazon EKS
 brew "weaveworks/tap/eksctl"
 cask "aerial"
@@ -85,22 +103,32 @@ cask "istat-menus"
 cask "iterm2"
 cask "keepassxc"
 cask "lastpass"
+cask "logitech-camera-settings"
 cask "logitech-options"
+cask "nzbget"
+cask "openvpn-connect"
 cask "parsec"
+cask "plex"
 cask "private-internet-access"
 cask "rectangle"
+cask "steam"
 cask "tableplus"
 cask "teamviewer"
+cask "transmission"
 cask "vlc"
 cask "vnc-viewer"
 cask "vscodium"
+mas "1Password 7", id: 1333542190
+mas "Cashrewards", id: 1449226880
 mas "Debit & Credit", id: 882637653
 mas "Microsoft Excel", id: 462058435
 mas "Microsoft Remote Desktop", id: 1295203466
 mas "Microsoft Word", id: 462054704
 mas "OneDrive", id: 823766827
+mas "Pages", id: 409201541
 mas "Parcel", id: 639968404
 mas "Slack", id: 803453959
 mas "SonicWall Mobile Connect", id: 822514576
 mas "Unsplash Wallpapers", id: 1284863847
 mas "WhatsApp", id: 1147396723
+mas "WireGuard", id: 1451685025
