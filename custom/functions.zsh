@@ -43,6 +43,34 @@ function branchr {
   done
 }
 
+# List local-only branches recursively
+# Assumes all your repos are in a single folder
+# Relies on git-clean function
+function cbranchr {
+  for dir in */; do
+  echo "<--- Current branch in repo $dir --->"
+    cd $dir
+    git branch --show-current
+    cd ..
+  done
+}
+
+# List local-only branches recursively
+# Assumes all your repos are in a single folder
+# Relies on git-clean function
+function glmr {
+  for dir in */; do
+  echo "<--- Pulling master in repo $dir --->"
+    cd $dir
+    if [[ $(git branch --show-current) = 'master' ]]; then
+      git pull
+    else
+      echo "master not checked out, aborting..."
+    fi
+    cd ..
+  done
+}
+
 # Intercept well-intentioned brew commands that will break things
 function brew() {
   case $@ in
