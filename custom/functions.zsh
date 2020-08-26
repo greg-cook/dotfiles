@@ -71,22 +71,6 @@ function glmr {
   done
 }
 
-# Intercept well-intentioned brew commands that will break things
-function brew() {
-  case $@ in
-    *elasticsearch|*mysql|*node|*nodenv|*nvm|*postgresql|*rbenv|*ruby|*rvm|*yarn)
-      if [[ $1 == "install" || $1 == "upgrade" ]]; then
-        echo "Here be dragons, you don't need to do this, ask someone for guidance..."
-      else
-        command brew $@
-      fi
-      ;;
-    *)
-      command brew $@
-      ;;
-  esac
-}
-
 # Drain kubernetes node in preparation of replacement
 function kdrain() {
   kubectl drain $1 --force --delete-local-data --ignore-daemonsets
