@@ -21,10 +21,14 @@ brew "asdf"
 brew "awscli"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
+# Core application library for C
+brew "glib"
 # Cross-platform make
 brew "cmake"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
+# Manage compile and link flags for libraries
+brew "pkg-config"
 # Play, record, convert, and stream audio and video
 brew "ffmpeg"
 # Command-line tool to access Weave Flux, the Kubernetes GitOps operator
@@ -53,10 +57,10 @@ brew "mas"
 brew "mysql-client@5.7"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# Port scanning utility for large networks
+brew "nmap"
 # Passphrase entry dialog utilizing the Assuan protocol
 brew "pinentry"
-# Manage compile and link flags for libraries
-brew "pkg-config"
 # User interface to the TELNET protocol
 brew "telnet"
 # Text interface for Git repositories
@@ -119,6 +123,7 @@ cask "visual-studio-code"
 cask "vlc"
 cask "vnc-viewer"
 mas "1Password 7", id: 1333542190
+mas "Amphetamine", id: 937984704
 mas "Cashrewards", id: 1449226880
 mas "Debit & Credit", id: 882637653
 mas "Microsoft Excel", id: 462058435
@@ -127,6 +132,7 @@ mas "Microsoft Word", id: 462054704
 mas "OneDrive", id: 823766827
 mas "Pages", id: 409201541
 mas "Parcel", id: 639968404
+mas "Qantas", id: 1468230799
 mas "Slack", id: 803453959
 mas "SonicWall Mobile Connect", id: 822514576
 mas "Unsplash Wallpapers", id: 1284863847
