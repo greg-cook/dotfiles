@@ -37,12 +37,16 @@ brew "fluxctl"
 brew "fzf"
 # Distributed revision control system
 brew "git"
+# Open source programming language to build simple/reliable/efficient software
+brew "go"
 # The Kubernetes package manager
 brew "helm"
 # Add GitHub support to git on the command-line
 brew "hub"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
+# Kubernetes command-line interface
+brew "kubernetes-cli"
 # Production Grade K8s Installation, Upgrades, and Management
 brew "kops"
 # Tool that can switch between kubectl contexts easily and create aliases
@@ -59,8 +63,12 @@ brew "mysql-client@5.7"
 brew "neovim"
 # Port scanning utility for large networks
 brew "nmap"
+# Platform built on V8 to build network applications
+brew "node"
 # Passphrase entry dialog utilizing the Assuan protocol
 brew "pinentry"
+# Powerful, clean, object-oriented scripting language
+brew "ruby"
 # User interface to the TELNET protocol
 brew "telnet"
 # Text interface for Git repositories
@@ -73,6 +81,8 @@ brew "wakeonlan"
 brew "watch"
 # Internet file retriever
 brew "wget"
+# JavaScript package manager
+brew "yarn"
 # Tracks most-used directories to make cd smarter
 brew "z"
 # UNIX shell (command interpreter)
