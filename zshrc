@@ -1,6 +1,6 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block, everything else may go below.
+# confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -19,13 +19,13 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # HYPHEN_INSENSITIVE="true"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
+DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to automatically update without prompting.
-DISABLE_UPDATE_PROMPT="true"
+# DISABLE_UPDATE_PROMPT="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
-export UPDATE_ZSH_DAYS=7
+# export UPDATE_ZSH_DAYS=7
 
 # Change the command execution time stamp shown in the history command output.
 # You can set one of the optional three formats:
@@ -44,22 +44,15 @@ plugins=(
 	aws
 	docker
 	docker-compose
-	dotenv
-	encode64
-	extract
-	gcloud
-	git
-	gpg-agent
-	history-substring-search
-	kubectl
-	ssh-agent
-	systemadmin
-	vscode
-	z
-	zsh-autosuggestions
-	zsh_reload
-	zsh-syntax-highlighting
-	)
+ 	git
+ 	gpg-agent
+ 	history-substring-search
+ 	kubectl
+ 	vscode
+ 	z
+ 	zsh-autosuggestions
+ 	zsh-syntax-highlighting
+ 	)
 
 # Suppress 'Insecure completion-dependent directories detected'
 # https://github.com/ohmyzsh/ohmyzsh/issues/6835#issuecomment-390216875
@@ -69,5 +62,3 @@ source $ZSH/oh-my-zsh.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
