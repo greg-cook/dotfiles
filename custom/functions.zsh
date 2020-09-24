@@ -75,3 +75,10 @@ function glmr {
 function kdrain() {
   kubectl drain $1 --force --delete-local-data --ignore-daemonsets
 }
+
+# Check ssl certificate dates
+function ssldates() {
+	SERVERNAME=$1
+	HOST=$2
+	echo | openssl s_client -servername $SERVERNAME -connect $HOST:443 2>/dev/null | openssl x509 -noout -dates
+}
