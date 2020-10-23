@@ -18,7 +18,7 @@ alias dkr='docker run'
 alias dkri='docker run -it --entrypoint=bash'
 
 # Nicely formatted diff for announcements
-alias deploydiff="git log production..master --pretty=format:'%<(23)%an    %s' --abbrev-commit"
+#alias deploydiff="git log production..master --pretty=format:'%<(24)%an    %s' --abbrev-commit"
 
 # Edit hosts file
 alias hosts='sudo $EDITOR /etc/hosts'

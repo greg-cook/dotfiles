@@ -1,15 +1,13 @@
-tap "buo/cask-upgrade"
 tap "drone/drone"
 tap "garethr/kubeval"
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-drivers"
-tap "homebrew/cask-fonts"
+tap "homebrew/cask-versions"
 tap "homebrew/core"
 tap "homebrew/services"
 tap "johanhaleby/kubetail"
 tap "mveritym/mel"
-tap "teamookla/speedtest"
 tap "weaveworks/tap"
 # Search tool like grep, but optimized for programmers
 brew "ack"
@@ -21,6 +19,8 @@ brew "asdf"
 brew "awscli"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
+# Freely available high-quality data compressor
+brew "bzip2"
 # Core application library for C
 brew "glib"
 # Cross-platform make
@@ -37,9 +37,13 @@ brew "fluxctl"
 brew "fzf"
 # Distributed revision control system
 brew "git"
+# Passphrase entry dialog utilizing the Assuan protocol
+brew "pinentry"
+# GNU Pretty Good Privacy (PGP) package
+brew "gnupg"
 # Open source programming language to build simple/reliable/efficient software
 brew "go"
-# The Kubernetes package manager
+# Kubernetes package manager
 brew "helm"
 # Add GitHub support to git on the command-line
 brew "hub"
@@ -57,18 +61,18 @@ brew "libpq"
 brew "mackup"
 # Mac App Store command-line interface
 brew "mas"
-# Open source relational database management system
-brew "mysql-client@5.7"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # Port scanning utility for large networks
 brew "nmap"
 # Platform built on V8 to build network applications
 brew "node"
-# Passphrase entry dialog utilizing the Assuan protocol
-brew "pinentry"
+# Perl-powered file rename script with many helpful built-ins
+brew "rename"
 # Powerful, clean, object-oriented scripting language
 brew "ruby"
+# Tool Command Language
+brew "tcl-tk"
 # User interface to the TELNET protocol
 brew "telnet"
 # Text interface for Git repositories
@@ -85,6 +89,8 @@ brew "wget"
 brew "yarn"
 # Tracks most-used directories to make cd smarter
 brew "z"
+# General-purpose lossless data-compression library
+brew "zlib"
 # UNIX shell (command interpreter)
 brew "zsh"
 brew "drone/drone/drone"
@@ -94,24 +100,18 @@ brew "garethr/kubeval/kubeval"
 brew "johanhaleby/kubetail/kubetail"
 # Decode all parts of a kubernetes secret, no more copypasting!
 brew "mveritym/mel/kubedecode"
-# Ookla Speedtest
-brew "teamookla/speedtest/speedtest"
 # The official CLI for Amazon EKS
 brew "weaveworks/tap/eksctl"
-cask "aerial"
 cask "authy"
 cask "balenaetcher"
 cask "calibre"
 cask "daisydisk"
+cask "discord"
 cask "docker"
 cask "firefox"
-cask "font-jetbrains-mono"
-cask "font-meslolg-nerd-font"
 cask "forklift"
 cask "google-chrome"
-cask "google-cloud-sdk"
 cask "google-drive-file-stream"
-cask "gpg-suite-no-mail"
 cask "insomnia"
 cask "istat-menus"
 cask "iterm2"
@@ -119,7 +119,6 @@ cask "keepassxc"
 cask "lastpass"
 cask "logitech-camera-settings"
 cask "logitech-options"
-cask "nzbget"
 cask "openvpn-connect"
 cask "parsec"
 cask "plex"
@@ -128,10 +127,10 @@ cask "rectangle"
 cask "steam"
 cask "tableplus"
 cask "teamviewer"
-cask "transmission"
 cask "visual-studio-code"
 cask "vlc"
 cask "vnc-viewer"
+cask "zoomus"
 mas "1Password 7", id: 1333542190
 mas "Amphetamine", id: 937984704
 mas "Cashrewards", id: 1449226880
@@ -140,11 +139,8 @@ mas "Microsoft Excel", id: 462058435
 mas "Microsoft Remote Desktop", id: 1295203466
 mas "Microsoft Word", id: 462054704
 mas "OneDrive", id: 823766827
-mas "Pages", id: 409201541
 mas "Parcel", id: 639968404
 mas "Qantas", id: 1468230799
 mas "Slack", id: 803453959
 mas "SonicWall Mobile Connect", id: 822514576
-mas "Unsplash Wallpapers", id: 1284863847
 mas "WhatsApp", id: 1147396723
-mas "WireGuard", id: 1451685025
