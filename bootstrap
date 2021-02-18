@@ -144,9 +144,9 @@ if [[ $OFFLINE != 'true' ]]; then
 fi
 
 # Change the users default shell
-if [[ $SHELL != "/usr/local/bin/zsh" ]]; then
+if [[ $SHELL != "$(brew --prefix)/bin/zsh" ]]; then
   echo "Changing the default shell..."
-  sudo chsh -s /usr/local/bin/zsh $USER
+  sudo chsh -s $(brew --prefix)/bin/zsh $USER
 fi
 
 echo "---> Bootstrap complete, happy hacking!"
