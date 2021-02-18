@@ -18,7 +18,7 @@ alias dkr='docker run'
 alias dkri='docker run -it --entrypoint=bash'
 
 # Nicely formatted diff for announcements
-#alias deploydiff="git log production..master --pretty=format:'%<(24)%an    %s' --abbrev-commit"
+alias deploydiff="git log production..master --pretty=format:'%<(24)%an    %s' --abbrev-commit"
 
 # Edit hosts file
 alias hosts='sudo $EDITOR /etc/hosts'
@@ -32,3 +32,5 @@ alias wx='curl v2.wttr.in'
 
 # Copy public ip to the clipboard
 alias pubip='curl -s ipv4.icanhazip.com | pbcopy'
+
+alias ibrew='arch -x86_64 /usr/local/bin/brew'

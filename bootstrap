@@ -26,7 +26,10 @@ if [[ $OFFLINE != 'true' ]]; then
       # Install brew
       if ! command -v brew >/dev/null 2>&1; then
           echo "Installing Homebrew..."
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" </dev/null
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/null
+          if [[ $(uname -m) == "arm64" ]]; then
+            echo "Looks like you have Apple Silicon, installing x86_64 Homebrew..."
+            arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/null
       else
           echo "Homebrew already installed, updating..."
           brew update
