@@ -31,6 +31,11 @@ alias kns='kubens'
 alias wx='curl v2.wttr.in'
 
 # Copy public ip to the clipboard
-alias pubip='curl -s ipv4.icanhazip.com | pbcopy'
+alias pubip='curl -s ipv4.icanhazip.com | tee >(pbcopy)'
 
+# Aliases requiring amd64
 alias ibrew='arch -x86_64 /usr/local/bin/brew'
+alias iasdf='arch -x86_64 asdf'
+
+# When need to run under amd64, specify a short alias
+alias i='arch -x86_64'

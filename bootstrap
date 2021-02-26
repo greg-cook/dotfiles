@@ -15,34 +15,43 @@ WORKDIR=$(pwd)
 # Check for internet connection
 dig +short +time=1 +tries=1 github.com >/dev/null 2>&1 || OFFLINE='true'
 
-if [[ $OFFLINE == 'true' ]]; then
+# Determine system type
+if [[ $(uname) == "Darwin" ]]; then MACOS='true'; fi
+if [[ $(uname -m) == "arm64" ]]; then APPLESILICON='true'; fi
+
+if [[ ${OFFLINE} ]]; then
   echo "Running in offline mode..."
 fi
 
-# Do the following on MacOS only
-if [[ $OFFLINE != 'true' ]]; then
+if [[ ! ${OFFLINE} ]]; then
   if [[ $(uname) == "Darwin" ]]; then
       echo "MacOS Detected"
-      # Install brew
       if ! command -v brew >/dev/null 2>&1; then
           echo "Installing Homebrew..."
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/null
-          if [[ $(uname -m) == "arm64" ]]; then
-            echo "Looks like you have Apple Silicon, installing x86_64 Homebrew..."
+          if [[ ${APPLE_SILICON} ]]; then
+            echo "Looks like you have Apple Silicon, installing amd64 Homebrew..."
             arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/null
+	  fi
       else
           echo "Homebrew already installed, updating..."
           brew update
+          if [[ ${APPLE_SILICON} ]]; then
+            echo "Looks like you have Apple Silicon, updating amd64 Homebrew..."
+            arch -x86_64 /usr/local/bin/brew update
+	  fi
       fi
-      # Install apps & packages with Brewfile
       echo "Installing packages and apps with Homebrew, Cask and mas..."
-      brew bundle --file=util/Brewfile --no-lock --no-upgrade
+      while read tap; do echo "Tapping $tap..."; brew tap $tap; arch -x86_64 /usr/local/bin/brew tap $tap; done < homebrew/tap.txt
+      while read formula; do echo "Installing $formula..."; brew install $formula || arch -x86_64 /usr/local/bin/brew install $formula; done < homebrew/formula.txt
+      while read cask; do echo "Installing $cask..."; brew install $cask; done < homebrew/cask.txt
+      while read app; do echo "Installing $app..."; mas install $app; done < homebrew/mas.txt
   fi
 fi
 
-#### Shell (zsh) configuration ####
-# Install Oh My Zsh
-if [[ $OFFLINE != 'true' ]]; then
+## Shell (zsh) configuration ####
+Install Oh My Zsh
+if [[ ! $OFFLINE ]]; then
   if [[ ! -d $HOME/.oh-my-zsh ]]; then
       # Install Oh My Zsh
       echo "Installing Oh My Zsh..."
@@ -57,7 +66,7 @@ if [[ $OFFLINE != 'true' ]]; then
 fi
 
 # Install Powerlevel10k zsh theme
-if [[ $OFFLINE != 'true' ]]; then
+if [[ ! $OFFLINE ]]; then
   if [[ ! -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]]; then
       echo "Installing Powerlevel10k zsh theme..."
       git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $HOME/.oh-my-zsh/custom/themes/powerlevel10k
@@ -70,7 +79,7 @@ if [[ $OFFLINE != 'true' ]]; then
 fi
 
 # Install additional zsh plugins not included with Oh My Zsh
-if [[ $OFFLINE != 'true' ]]; then
+if [[ ! $OFFLINE ]]; then
   for r in zsh-autosuggestions zsh-syntax-highlighting; do
       if [[ ! -d $HOME/.oh-my-zsh/custom/plugins/$r ]]; then
           echo "Installing $r..."
@@ -84,7 +93,7 @@ if [[ $OFFLINE != 'true' ]]; then
   done
 fi
 
-# Link custom .zsh files to Oh My Zsh custom folder
+# # Link custom .zsh files to Oh My Zsh custom folder
 echo "Linking custom .zsh files..."
 for f in custom/*; do
     ln -sf $WORKDIR/$f $HOME/.oh-my-zsh/$f
@@ -110,7 +119,7 @@ if [[ ! -f $HOME/.z ]]; then
 fi
 
 # Install asdf version manager plugins
-if [[ $OFFLINE != 'true' ]]; then
+if [[ ! $OFFLINE ]]; then
   for p in golang kubectl nodejs python ruby yarn; do
     if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
       echo "Installing asdf plugin $p..."
@@ -125,11 +134,6 @@ if [[ $OFFLINE != 'true' ]]; then
   done
 fi
 
-# Install default versions
-if [[ $OFFLINE != 'true' ]]; then
-  asdf install
-fi
-
 # Restore configs with mackup
 echo "Linking mackup config..."
 if [[ ! -d $HOME/.mackup ]]; then
@@ -138,7 +142,7 @@ fi
 for f in mackup/*; do
   ln -sf $WORKDIR/$f $HOME/.$f
 done
-if [[ $OFFLINE != 'true' ]]; then
+if [[ ! $OFFLINE ]]; then
   echo "Restoring files with mackup..."
   mackup restore -f
 fi
