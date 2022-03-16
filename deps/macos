@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+function install_homebrew {
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/null
+    if [[ $(uname -m) == "arm64" ]]; then
+        softwareupdate --install-rosetta --agree-to-license
+        arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/null
+    fi
+}
+
+function source_brew {
+    if ! command -v brew; then
+        case $(uname -m) in
+        "arm64")
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+            ;;
+        "x86_64")
+            eval "$(/usr/local/bin/brew shellenv)"
+            ;;
+        esac
+    fi
+}
+
+function install_packages {
+    ln -sf $SCRIPT_DIR/Brewfile $HOME/.Brewfile
+    brew bundle install --global --no-lock || brew bundle install --global --no-lock
+}

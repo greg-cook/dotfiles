@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# lsb_release -si == Ubuntu
+
+sudo apt-get update
+sudo apt-get install -y \
+    ack \
+    curl \
+    git \
+    gnupg \
+    nodejs \
+    openssh-server \
+    python \
+    python3 \
+    ruby \
+    wget
+
+# ruby-build (https://github.com/rbenv/ruby-build/wiki#ubuntudebianmint)
+sudo apt-get install -y \
+    autoconf \
+    bison \
+    build-essential \
+    libdb-dev \
+    libffi-dev \
+    libgdbm-dev \
+    libgdbm6 \
+    libncurses5-dev \
+    libreadline6-dev \
+    libssl-dev \
+    libyaml-dev \
+    zlib1g-dev
+
+# asdf (http://asdf-vm.com/guide/getting-started.html)
+if [[ ! -d $HOME/.asdf ]]; then
+    git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch v0.9.0
+fi
+sudo apt-get install -y \
+    curl \
+    dirmngr \
+    gawk \
+    gpg
+source $HOME/.asdf/asdf.sh
+asdf plugin add nodejs || echo "plugin nodejs already installed"
+asdf install nodejs lts
+
+# docker (https://docs.docker.com/engine/install/ubuntu/)
+sudo apt-get install -y \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+if [[ ! -f /usr/share/keyrings/docker-archive-keyring.gpg ]]; then
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+fi
+if [[ ! -f /etc/apt/sources.list.d/docker.list ]]; then
+    echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+    $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+fi
+sudo apt-get update
+sudo apt-get install -y \
+    docker-ce \
+    docker-ce-cli \
+    containerd.io
+groupadd docker >/dev/null || echo "group 'docker' already exists"
+sudo usermod -aG docker $USER
+
+# compose (https://docs.docker.com/compose/install/)
+if [[ ! -f /usr/local/bin/docker-compose ]]; then
+    sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+fi
+
+# Oh My Zsh
+if [[ ! -d $HOME/.oh-my-zsh ]]; then
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
+
+# zsh theme - Powerlevel10k
+if [[ ! -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]]; then
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+fi
+sed -i 's/robbyrussell/powerlevel10k\/powerlevel10k/' $HOME/.zshrc
+sed -i 's/(git)/(asdf docker docker-compose git)/' $HOME/.zshrc
+
+sudo chsh -s $(which zsh) $(whoami)
