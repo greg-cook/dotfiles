@@ -1,29 +1,20 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -eo pipefail
 
-function install_homebrew {
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/null
-    if [[ $(uname -m) == "arm64" ]]; then
-        softwareupdate --install-rosetta --agree-to-license
-        arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/null
-    fi
-}
+# Ask for the administrator password upfront
+sudo -v
+# Keep-alive: update existing `sudo` timestamp until `bootstrap` has finished
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-function source_brew {
-    if ! command -v brew; then
-        case $(uname -m) in
-        "arm64")
-            eval "$(/opt/homebrew/bin/brew shellenv)"
-            ;;
-        "x86_64")
-            eval "$(/usr/local/bin/brew shellenv)"
-            ;;
-        esac
-    fi
-}
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/null
+if [[ $(uname -m) == "arm64" ]]; then
+    softwareupdate --install-rosetta --agree-to-license
+    arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/null
+fi
 
-function install_packages {
-    ln -sf $SCRIPT_DIR/Brewfile $HOME/.Brewfile
-    brew bundle install --global --no-lock || brew bundle install --global --no-lock
-}
+if ! command -v brew; then
+    [[ $(uname -m) == "arm64" ]] && eval "$(/opt/homebrew/bin/brew shellenv)" || eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+brew bundle install --global --no-lock

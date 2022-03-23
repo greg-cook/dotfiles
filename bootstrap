@@ -1,147 +1,105 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -eo pipefail
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 cd $SCRIPT_DIR
 
-function use_sudo {
-    # Ask for the administrator password upfront
-    sudo -v
-    # Keep-alive: update existing `sudo` timestamp until `bootstrap` has finished
-    while true; do
-        sudo -n true
-        sleep 60
-        kill -0 "$$" || exit
-    done 2>/dev/null &
-}
-
-function setup_omz {
-    # Shell (zsh) configuration ####
-    # Install Oh My Zsh
-    if [[ ! -d $HOME/.oh-my-zsh ]]; then
-        # Install Oh My Zsh
-        echo "Installing Oh My Zsh..."
-        RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
-    else
-        # Use the inbuilt mechanism to update Oh My Zsh
-        echo "Oh My Zsh already installed, updating..."
-        cd $HOME/.oh-my-zsh
-        git pull >/dev/null 2>&1
-        cd $SCRIPT_DIR
-    fi
-
-    # Install Powerlevel10k zsh theme
-    if [[ ! -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]]; then
-        echo "Installing Powerlevel10k zsh theme..."
-        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $HOME/.oh-my-zsh/custom/themes/powerlevel10k
-    else
-        echo "Powerlevel10k already installed, updating..."
-        cd $HOME/.oh-my-zsh/custom/themes/powerlevel10k
-        git pull >/dev/null 2>&1
-        cd $SCRIPT_DIR
-    fi
-
-    # Install additional zsh plugins not included with Oh My Zsh
-    for r in zsh-autosuggestions zsh-syntax-highlighting; do
-        if [[ ! -d $HOME/.oh-my-zsh/custom/plugins/$r ]]; then
-            echo "Installing $r..."
-            git clone --depth=1 https://github.com/zsh-users/$r $HOME/.oh-my-zsh/custom/plugins/$r
-        else
-            echo "$r already installed, updating..."
-            cd $HOME/.oh-my-zsh/custom/plugins/$r
-            git pull >/dev/null 2>&1
-            cd $SCRIPT_DIR
-        fi
-    done
-
-    # Link custom .zsh files to Oh My Zsh custom folder
-    echo "Linking custom .zsh files..."
-    for f in custom/*; do
-        ln -sf $SCRIPT_DIR/$f $HOME/.oh-my-zsh/$f
-    done
-}
-
 function link_files {
-    # Link ssh config
-    echo "Linking ssh config..."
     mkdir -p $HOME/.ssh
     case $(uname -s) in
     "Darwin")
         ln -sf $SCRIPT_DIR/ssh/config.mac $HOME/.ssh/config
         ;;
-    *)
+    "Linux")
         ln -sf $SCRIPT_DIR/ssh/config.linux $HOME/.ssh/config
         ;;
     esac
     mkdir -p $HOME/.ssh/config.d
     touch $HOME/.ssh/config.d/empty.config
 
-    # Link $HOME dotfiles
-    echo "Linking files to home directory..."
     for f in *; do
-        if [[ ! $f == "README.md" ]] && [[ ! $f == "bootstrap" ]] && [[ ! -d $f ]]; then
+        if [[ ! $f == "README.md" ]] && [[ ! $f == "bootstrap*" ]] && [[ ! -d $f ]]; then
             ln -sf $SCRIPT_DIR/$f $HOME/.$f
         fi
     done
 
-    # Create this file to suppress error from z on first 'cd'
-    if [[ ! -f $HOME/.z ]]; then
-        touch $HOME/.z
-    fi
+    touch $HOME/.z
+}
+
+function install_deps {
+    case $(uname -s) in
+    "Darwin")
+        ./deps/macos
+        ;;
+    "Linux")
+        [[ -f ./deps/$(lsb_release -si) ]] && ./deps/$(lsb_release -si) || { echo "Unsupported Linux distribution." && exit 1 }
+        ;;
+    *)
+        echo "Unsupported operating system."
+        exit 1
+    esac
 }
 
 function setup_asdf {
-    # Install asdf version manager plugins
+    # asdf (http://asdf-vm.com/guide/getting-started.html)
+    [[ ! -d $HOME/.asdf ]] && git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch v0.9.0
+    [[ ! command -v asdf ]] || . $HOME/.asdf/asdf.sh && . $HOME/.asdf/completions/asdf.bash
     for p in $(awk '{print $1}' <tool-versions); do
-        if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
-            echo "Installing asdf plugin $p..."
-            asdf plugin add $p
-        else
-            echo "asdf plugin $p already installed, updating..."
-            asdf plugin update $p >/dev/null 2>&1
-        fi
+        [[ ! -d $HOME/.asdf/plugins/$p ]] && asdf plugin add $p || asdf plugin update $p >/dev/null 2>&1
     done
 }
 
-function mackup_restore {
-    # Restore configs with mackup
-    if [[ $(uname -s) == "Darwin" ]]; then
-        echo "Linking mackup config..."
-        if [[ ! -d $HOME/.mackup ]]; then
-            mkdir -p $HOME/.mackup
-        fi
-        for f in mackup/*; do
-            ln -sf $SCRIPT_DIR/$f $HOME/.$f
-        done
-        echo "Restoring files with mackup..."
-        mackup restore -f
+function setup_omz {
+    if [[ ! -d $HOME/.oh-my-zsh ]]; then
+        RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
+    else
+        cd $HOME/.oh-my-zsh
+        git pull >/dev/null 2>&1
+        cd $SCRIPT_DIR
     fi
+
+    if [[ ! -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]]; then
+        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $HOME/.oh-my-zsh/custom/themes/powerlevel10k
+    else
+        cd $HOME/.oh-my-zsh/custom/themes/powerlevel10k
+        git pull >/dev/null 2>&1
+        cd $SCRIPT_DIR
+    fi
+
+    for r in zsh-autosuggestions zsh-syntax-highlighting; do
+        if [[ ! -d $HOME/.oh-my-zsh/custom/plugins/$r ]]; then
+            git clone --depth=1 https://github.com/zsh-users/$r $HOME/.oh-my-zsh/custom/plugins/$r
+        else
+            cd $HOME/.oh-my-zsh/custom/plugins/$r
+            git pull >/dev/null 2>&1
+            cd $SCRIPT_DIR
+        fi
+    done
+
+    for f in custom/*; do
+        ln -sf $SCRIPT_DIR/$f $HOME/.oh-my-zsh/$f
+    done
 }
 
 function set_default_shell {
-    # Change the users default shell
-    if [[ $SHELL != "$(brew --prefix)/bin/zsh" ]]; then
-        echo "Changing the default shell..."
-        sudo chsh -s $(brew --prefix)/bin/zsh $USER
-    fi
+    [[ $SHELL != "$(which zsh)" ]] && sudo chsh -s $(which zsh) $USER
 }
 
-if [[ $(uname -s) == "Darwin" ]]; then
-    use_sudo
-fi
+function mackup_restore {
+    mkdir -p $HOME/.mackup
+    for f in mackup/*; do
+        ln -sf $SCRIPT_DIR/$f $HOME/.$f
+    done
+    mackup restore -f
+}
 
-install_homebrew
-source_brew
-install_packages
-setup_omz
 link_files
+install_deps
 setup_asdf
+setup_omz
 set_default_shell
 
-if [[ $(uname -s) == "Darwin" ]]; then
-    mackup_restore
-    ./util/macos
-fi
+[[ $(uname -s) == "Darwin" ]] && mackup_restore && ./util/macos
 
 echo "---> Bootstrap complete, happy hacking!"
