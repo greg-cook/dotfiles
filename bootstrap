@@ -5,46 +5,26 @@ set -eo pipefail
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 cd $SCRIPT_DIR
 
-function link_files {
-    mkdir -p $HOME/.ssh
-    case $(uname -s) in
-    "Darwin")
-        ln -sf $SCRIPT_DIR/ssh/config.mac $HOME/.ssh/config
-        ;;
-    "Linux")
-        ln -sf $SCRIPT_DIR/ssh/config.linux $HOME/.ssh/config
-        ;;
-    esac
-    mkdir -p $HOME/.ssh/config.d
-    touch $HOME/.ssh/config.d/empty.config
-
-    for f in *; do
-        if [[ ! $f == "README.md" ]] && [[ ! $f == "bootstrap*" ]] && [[ ! -d $f ]]; then
-            ln -sf $SCRIPT_DIR/$f $HOME/.$f
-        fi
-    done
-
-    touch $HOME/.z
-}
-
 function install_deps {
     case $(uname -s) in
     "Darwin")
+        ln -sf ./Brewfile $HOME/.Brewfile
         ./deps/macos
         ;;
     "Linux")
-        [[ -f ./deps/$(lsb_release -si) ]] && ./deps/$(lsb_release -si) || { echo "Unsupported Linux distribution." && exit 1 }
+        [[ -f ./deps/$(lsb_release -si) ]] && ./deps/$(lsb_release -si) || ( echo "Unsupported Linux distribution." && exit 1 )
         ;;
     *)
         echo "Unsupported operating system."
         exit 1
+        ;;
     esac
 }
 
 function setup_asdf {
     # asdf (http://asdf-vm.com/guide/getting-started.html)
     [[ ! -d $HOME/.asdf ]] && git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch v0.9.0
-    [[ ! command -v asdf ]] || . $HOME/.asdf/asdf.sh && . $HOME/.asdf/completions/asdf.bash
+    [[ ! $(command -v asdf) ]] && . $HOME/.asdf/asdf.sh && . $HOME/.asdf/completions/asdf.bash
     for p in $(awk '{print $1}' <tool-versions); do
         [[ ! -d $HOME/.asdf/plugins/$p ]] && asdf plugin add $p || asdf plugin update $p >/dev/null 2>&1
     done
@@ -52,7 +32,7 @@ function setup_asdf {
 
 function setup_omz {
     if [[ ! -d $HOME/.oh-my-zsh ]]; then
-        RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" --unattended
+        git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
     else
         cd $HOME/.oh-my-zsh
         git pull >/dev/null 2>&1
@@ -86,6 +66,28 @@ function set_default_shell {
     [[ $SHELL != "$(which zsh)" ]] && sudo chsh -s $(which zsh) $USER
 }
 
+function link_files {
+    mkdir -p $HOME/.ssh
+    case $(uname -s) in
+    "Darwin")
+        ln -sf $SCRIPT_DIR/ssh/config.mac $HOME/.ssh/config
+        ;;
+    "Linux")
+        ln -sf $SCRIPT_DIR/ssh/config.linux $HOME/.ssh/config
+        ;;
+    esac
+    mkdir -p $HOME/.ssh/config.d
+    touch $HOME/.ssh/config.d/empty.config
+
+    for f in *; do
+        if [[ ! $f == "README.md" ]] && [[ ! $f == "bootstrap" ]] && [[ ! -d $f ]]; then
+            ln -sf $SCRIPT_DIR/$f $HOME/.$f
+        fi
+    done
+
+    touch $HOME/.z
+}
+
 function mackup_restore {
     mkdir -p $HOME/.mackup
     for f in mackup/*; do
@@ -94,11 +96,11 @@ function mackup_restore {
     mackup restore -f
 }
 
-link_files
 install_deps
 setup_asdf
 setup_omz
 set_default_shell
+link_files
 
 [[ $(uname -s) == "Darwin" ]] && mackup_restore && ./util/macos
 

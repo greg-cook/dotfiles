@@ -1,18 +1,6 @@
-case $(uname -s) in
-"Darwin")
-    case $(uname -m) in
-    "arm64")
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-        ;;
-    "x86_64")
-        eval "$(/usr/local/bin/brew shellenv)"
-        ;;
-    esac
-    ;;
-"Linux")
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    ;;
-esac
+if [[ $(uname -s) == "Darwin" ]]; then
+    [[ $(uname -m) == "arm64" ]] && eval "$(/opt/homebrew/bin/brew shellenv)" || eval "$(/usr/local/bin/brew shellenv)"
+fi
 
 # Use bash style arrays
 setopt KSH_ARRAYS
