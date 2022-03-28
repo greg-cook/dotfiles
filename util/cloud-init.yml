@@ -10,9 +10,8 @@ power_state:
   timeout: 30
   condition: True
 runcmd:
-  - sudo -Hiu greg bash -c 'git clone https://github.com/greg-cook/dotfiles.git ~/dotfiles'
-  # TODO: once bootstrap script has been modified
-  # - sudo -Hiu greg bash -c '~/dotfiles/bootstrap'
+  - sudo -Hiu greg bash -c 'git clone --branch aws-dev https://github.com/greg-cook/dotfiles.git ~/dotfiles'
+  - sudo -Hiu greg bash -c '~/dotfiles/bootstrap'
 timezone: "Australia/Sydney"
 users:
   - name: greg
