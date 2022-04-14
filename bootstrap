@@ -8,7 +8,7 @@ cd $SCRIPT_DIR
 function install_deps {
     case $(uname -s) in
     "Darwin")
-        ln -sf ./Brewfile $HOME/.Brewfile
+        ln -sf $SCRIPT_DIR/Brewfile $HOME/.Brewfile
         ./deps/macos
         ;;
     "Linux")
