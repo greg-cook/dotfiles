@@ -32,20 +32,24 @@ function install_homebrew {
 
 function source_brew {
     echo "$(date) Start ${FUNCNAME[0]}" >>$SCRIPT_DIR/bootstrap.log
-    if ! command -v brew; then
-        case $(uname -sm) in
-        "Darwin arm64")
+      case $(uname -sm) in
+      "Darwin arm64")
+          if [[ $(command -v brew) != "/opt/homebrew/bin/brew" ]]; then
             eval "$(/opt/homebrew/bin/brew shellenv)"
-            ;;
-        "Darwin x86_64")
-            eval "$(/usr/local/bin/brew shellenv)"
-            ;;
-        "Linux x86_64")
+	  fi
+          ;;
+      "Darwin x86_64")
+          if [ ! command -v brew ]; then
+	    eval "$(/usr/local/bin/brew shellenv)"
+	  fi
+          ;;
+      "Linux x86_64")
+          if [ ! command -v brew ]; then
             eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
             brew install gcc
-            ;;
-        esac
-    fi
+	  fi
+          ;;
+      esac
     echo "$(date) Finish ${FUNCNAME[0]}" >>$SCRIPT_DIR/bootstrap.log
 }
 
@@ -150,23 +154,6 @@ function setup_asdf {
     echo "$(date) Finish ${FUNCNAME[0]}" >>$SCRIPT_DIR/bootstrap.log
 }
 
-function mackup_restore {
-    echo "$(date) Start ${FUNCNAME[0]}" >>$SCRIPT_DIR/bootstrap.log
-    # Restore configs with mackup
-    if [[ $(uname -s) == "Darwin" ]]; then
-        echo "Linking mackup config..."
-        if [[ ! -d $HOME/.mackup ]]; then
-            mkdir -p $HOME/.mackup
-        fi
-        for f in mackup/*; do
-            ln -sf $SCRIPT_DIR/$f $HOME/.$f
-        done
-        echo "Restoring files with mackup..."
-        mackup restore -f
-    fi
-    echo "$(date) Finish ${FUNCNAME[0]}" >>$SCRIPT_DIR/bootstrap.log
-}
-
 function set_default_shell {
     echo "$(date) Start ${FUNCNAME[0]}" >>$SCRIPT_DIR/bootstrap.log
     # Change the users default shell
@@ -181,16 +168,15 @@ if [[ $(uname -s) == "Darwin" ]]; then
     use_sudo
 fi
 
-install_homebrew
+# install_homebrew
 source_brew
-install_packages
+# install_packages
 setup_omz
 link_files
 setup_asdf
 set_default_shell
 
 if [[ $(uname -s) == "Darwin" ]]; then
-    mackup_restore
     ./util/macos
 fi
 

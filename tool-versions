@@ -1,6 +1,6 @@
 golang latest system
 helm latest system
-kubectl latest system
-nodejs latest system
+kubectl 1.22.7
+nodejs 22.2.0
 python latest system
-ruby latest system
+ruby 3.3.1
