@@ -92,6 +92,10 @@ defaults write com.apple.dock showhidden -bool true
 # Don’t show recent applications in Dock
 defaults write com.apple.dock show-recents -bool false
 
+# Remove all apps from the dock
+defaults write com.apple.dock persistent-apps -array
+killall Dock
+
 # Restore non private windows at launch
 defaults write com.apple.Safari AlwaysRestoreSessionAtLaunch -bool true
 defaults write com.apple.Safari OpenPrivateWindowWhenNotRestoringSessionAtLaunch -bool false

@@ -45,6 +45,8 @@ export PATH=$(
 # Unset bash style arrays
 unsetopt KSH_ARRAYS
 
+PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/.local/bin" ]; then
     PATH="$HOME/.local/bin:$PATH"

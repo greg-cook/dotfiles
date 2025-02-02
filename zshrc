@@ -37,6 +37,7 @@ plugins=(
     gpg-agent
     history-substring-search
     kubectl
+    terraform
     vscode
     z
     zsh-autosuggestions
@@ -64,3 +65,6 @@ for file in $(find -L $HOME/environment -type f -type f \( -name "*.rc" -o -name
     . "${file}"
 done
 # END ANSIBLE MANAGED BLOCK - SOURCE ~/environment
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+

@@ -23,9 +23,15 @@ function use_sudo {
 function install_homebrew {
     echo "$(date) Start ${FUNCNAME[0]}" >>$SCRIPT_DIR/bootstrap.log
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/null
+    echo "$(date) Finish ${FUNCNAME[0]}" >>$SCRIPT_DIR/bootstrap.log
+}
+
+function install_rosetta {
+    echo "$(date) Start ${FUNCNAME[0]}" >>$SCRIPT_DIR/bootstrap.log
     if [[ $(uname -sm) == "Darwin arm64" ]]; then
         softwareupdate --install-rosetta --agree-to-license
-        arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/null
+    else
+        echo "Rosetta install skipped"
     fi
     echo "$(date) Finish ${FUNCNAME[0]}" >>$SCRIPT_DIR/bootstrap.log
 }
@@ -168,9 +174,10 @@ if [[ $(uname -s) == "Darwin" ]]; then
     use_sudo
 fi
 
-# install_homebrew
+install_homebrew
+install_rosetta
 source_brew
-# install_packages
+install_packages
 setup_omz
 link_files
 setup_asdf

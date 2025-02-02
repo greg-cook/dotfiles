@@ -1,9 +1,25 @@
 #cloud-config
+package_update: true
 package_upgrade: true
 packages:
   - build-essential
+  - git
+  - libffi-dev
+  - libmysqlclient-dev
   - libssl-dev
-  - mosh
+  - libyaml-dev
+  - mysql-client
+  - ncurses
+  - neovim
+  - nodejs
+  - openssh-server
+  - python
+  - readline
+  - ruby
+  - software-properties-common
+  - tmux
+  - unattended-upgrades
+  - vim
   - zlib1g-dev
 power_state:
   delay: now
@@ -11,19 +27,42 @@ power_state:
   message: Bootstrap complete, rebooting...
   timeout: 30
   condition: True
-runcmd:
-  - sudo -Hiu greg bash -c 'git clone https://github.com/greg-cook/dotfiles.git ~/dotfiles'
-  - sudo -Hiu greg bash -c '~/dotfiles/bootstrap'
-timezone: "Australia/Sydney"
+# runcmd:
+#   - sudo -Hiu greg bash -c 'git clone https://github.com/greg-cook/dotfiles.git ~/dotfiles'
+#   - sudo -Hiu greg bash -c '~/dotfiles/bootstrap'
+timezone: "Europe/London"
 users:
   - name: greg
     groups: sudo
     shell: /bin/bash
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
-    ssh-import-id: gh:greg-cook
+    ssh_import_id:
+      - gh:greg-cook
 write_files:
   - content: |
-      @reboot sudo shutdown -P +120
-      0 19 * * * sudo shutdown -P
-      0 23 * * * sudo shutdown -P
+      */30 * * * * root shutdown -P +10
     path: /etc/cron.d/shutdown-timer
+  - content: |
+      AcceptEnv GEMFURY_TOKEN
+      AcceptEnv GIT_AUTHOR_EMAIL
+      AcceptEnv GIT_AUTHOR_NAME
+      AcceptEnv GIT_COMMITTER_EMAIL
+      AcceptEnv GIT_COMMITTER_NAME
+      AcceptEnv GITHUB_PACKAGES_TOKEN
+      AcceptEnv GITHUB_PACKAGES_USERNAME
+      AcceptEnv SHAKACODE_TOKEN
+    path: /etc/ssh/sshd_config.d/90-dev-settings.conf
+  - content: |
+      #!/bin/bash
+      # Extract information about the Instance
+      INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id/)
+      AZ=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone/)
+      MY_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4/)
+
+      # Extract tags associated with instance
+      ZONE_TAG=$(aws ec2 describe-tags --region ${AZ::-1} --filters "Name=resource-id,Values=${INSTANCE_ID}" --query 'Tags[?Key==`AUTO_DNS_ZONE`].Value' --output text)
+      NAME_TAG=$(aws ec2 describe-tags --region ${AZ::-1} --filters "Name=resource-id,Values=${INSTANCE_ID}" --query 'Tags[?Key==`AUTO_DNS_NAME`].Value' --output text)
+
+      # Update Route 53 Record Set based on the Name tag to the current Public IP address of the Instance
+      aws route53 change-resource-record-sets --hosted-zone-id $ZONE_TAG --change-batch '{"Changes":[{"Action":"UPSERT","ResourceRecordSet":{"Name":"'$NAME_TAG'","Type":"A","TTL":5,"ResourceRecords":[{"Value":"'$MY_IP'"}]}}]}'
+    path: /var/lib/cloud/scripts/per-boot/update-route53.sh

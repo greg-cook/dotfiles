@@ -16,7 +16,7 @@ function git-clean {
 function local-branches {
   fetch-and-prune
   # Show local branches
-  git branch -vv | cut -c 3- | awk '$3 !~/\[/ { print $1 }'
+  git branch -vv | cut -c 3- | awk '{ print $1 }'
 }
 
 # Clean repos recursively
@@ -85,4 +85,10 @@ function ssltext() {
 	SERVERNAME=$1
 	HOST=$2
 	echo | openssl s_client -servername $SERVERNAME -connect $HOST:443 2>/dev/null | openssl x509 -noout -text
+}
+
+function loadsecrets() {
+  export SHAKACODE_TOKEN=$(op read --account airtasker.1password.com "op://OF Engineering/Shakacode Token/password")
+  export GITHUB_PACKAGES_TOKEN=$(op read --account my.1password.com "op://Private/fxi4pq4gvnbvxjk2rrjir5lvnq/GITHUB_PACKAGES_TOKEN")
+  export GITHUB_TOKEN=$(op read --account my.1password.com "op://Private/fxi4pq4gvnbvxjk2rrjir5lvnq/GITHUB_TOKEN")
 }

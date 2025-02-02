@@ -7,3 +7,5 @@ export GOPATH="${HOME}/go"
 # Set editors
 export EDITOR="nvim"
 export VISUAL="nvim"
+
+export GITHUB_PACKAGES_USERNAME="greg-cook"
